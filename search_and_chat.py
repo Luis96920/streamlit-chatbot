@@ -1,15 +1,16 @@
 from langchain.agents import ConversationalChatAgent, AgentExecutor
 from langchain.callbacks import StreamlitCallbackHandler
 from langchain.chat_models import ChatOpenAI
+from langchain import HuggingFaceHub
 from langchain.memory import ConversationBufferMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.tools import DuckDuckGoSearchRun
 import streamlit as st
 
+HUGGINGFACE_API="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"
+
 st.set_page_config(page_title="LangChain: Chat with search", page_icon="🦜")
 st.title("🦜 LangChain: Chat with search")
-
-openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
 msgs = StreamlitChatMessageHistory()
 memory = ConversationBufferMemory(
@@ -35,11 +36,11 @@ for idx, msg in enumerate(msgs.messages):
 if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?"):
     st.chat_message("user").write(prompt)
 
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
-
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key, streaming=True)
+    llm = HuggingFaceHub(
+            repo_id="tiiuae/falcon-7b-instruct",
+            model_kwargs={"temperature": 0.5, "max_new_tokens": 500},
+            huggingfacehub_api_token=HUGGINGFACE_API,
+        )
     tools = [DuckDuckGoSearchRun(name="Search")]
     chat_agent = ConversationalChatAgent.from_llm_and_tools(llm=llm, tools=tools)
     executor = AgentExecutor.from_agent_and_tools(
@@ -52,5 +53,6 @@ if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?")
     with st.chat_message("assistant"):
         st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
         response = executor(prompt, callbacks=[st_cb])
+        print(response)
         st.write(response["output"])
         st.session_state.steps[str(len(msgs.messages) - 1)] = response["intermediate_steps"]
