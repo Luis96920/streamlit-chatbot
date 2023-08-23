@@ -12,6 +12,7 @@ langchain = "^0.0.271"
 streamlit = "^1.25.0"
 huggingface-hub = "^0.16.4"
 duckduckgo-search = "^3.8.5"
+openai = "^0.27.9"
 
 
 [build-system]
