@@ -4,7 +4,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain import HuggingFaceHub
 from langchain.memory import ConversationBufferMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
-from langchain.tools import DuckDuckGoSearchRun
+from langchain.chains import LLMChain, RetrievalQA
+from langchain import PromptTemplate
 import streamlit as st
 
 HUGGINGFACE_API="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"
@@ -41,18 +42,12 @@ if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?")
             model_kwargs={"temperature": 0.5, "max_new_tokens": 500},
             huggingfacehub_api_token=HUGGINGFACE_API,
         )
-    tools = [DuckDuckGoSearchRun(name="Search")]
-    chat_agent = ConversationalChatAgent.from_llm_and_tools(llm=llm, tools=tools)
-    executor = AgentExecutor.from_agent_and_tools(
-        agent=chat_agent,
-        tools=tools,
-        memory=memory,
-        return_intermediate_steps=True,
-        handle_parsing_errors=True,
+    prompt_template = PromptTemplate.from_template(
+        "Answer the question: {prompt}"
     )
+    qa_chain = LLMChain(llm = llm, prompt = prompt_template)
     with st.chat_message("assistant"):
         st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
-        response = executor(prompt, callbacks=[st_cb])
+        response = qa_chain({"prompt": prompt})
         print(response)
-        st.write(response["output"])
-        st.session_state.steps[str(len(msgs.messages) - 1)] = response["intermediate_steps"]
+        st.write(response["text"])
