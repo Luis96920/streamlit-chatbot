@@ -10,8 +10,8 @@ import streamlit as st
 
 HUGGINGFACE_API="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"
 
-st.set_page_config(page_title="LangChain: Chat with search", page_icon="🦜")
-st.title("🦜 LangChain: Chat with search")
+st.set_page_config(page_title="ChatBot", page_icon="😊")
+st.title("Simple ChatBot")
 
 msgs = StreamlitChatMessageHistory()
 memory = ConversationBufferMemory(
@@ -37,6 +37,7 @@ for idx, msg in enumerate(msgs.messages):
 if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?"):
     st.chat_message("user").write(prompt)
 
+    msgs.add_user_message(prompt)
     llm = HuggingFaceHub(
             repo_id="tiiuae/falcon-7b-instruct",
             model_kwargs={"temperature": 0.5, "max_new_tokens": 500},
@@ -49,5 +50,5 @@ if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?")
     with st.chat_message("assistant"):
         st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
         response = qa_chain({"prompt": prompt})
-        print(response)
+        msgs.add_ai_message(response["text"])
         st.write(response["text"])
