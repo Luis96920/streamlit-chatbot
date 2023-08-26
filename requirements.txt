@@ -3,3 +3,4 @@ langchain
 huggingface_hub
 duckduckgo-search
 openai
+python-dotenv
