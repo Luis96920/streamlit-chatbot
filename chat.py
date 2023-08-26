@@ -15,7 +15,7 @@ dotenv.load_dotenv()
 HUGGINGFACE_API = os.getenv("HUGGINGFACE_API")
 
 st.set_page_config(page_title="ChatBot", page_icon="😊")
-st.title("Simple ChatBot")
+st.title("ChatBot")
 
 msgs = StreamlitChatMessageHistory()
 memory = ConversationBufferMemory(
