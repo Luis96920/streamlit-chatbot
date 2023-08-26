@@ -1,21 +1,27 @@
 from langchain.agents import ConversationalChatAgent, AgentExecutor
 from langchain.callbacks import StreamlitCallbackHandler
 from langchain.chat_models import ChatOpenAI
+from langchain import HuggingFaceHub
 from langchain.memory import ConversationBufferMemory
 from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
-from langchain.tools import DuckDuckGoSearchRun
+from langchain.chains import LLMChain, RetrievalQA
+from langchain import PromptTemplate
 import streamlit as st
+import os
+import dotenv
 
-st.set_page_config(page_title="LangChain: Chat with search", page_icon="🦜")
-st.title("🦜 LangChain: Chat with search")
+dotenv.load_dotenv()
 
-openai_api_key = st.sidebar.text_input("OpenAI API Key", type="password")
+HUGGINGFACE_API = os.getenv("HUGGINGFACE_API")
+
+st.set_page_config(page_title="ChatBot", page_icon="😊")
+st.title("ChatBot")
 
 msgs = StreamlitChatMessageHistory()
 memory = ConversationBufferMemory(
     chat_memory=msgs, return_messages=True, memory_key="chat_history", output_key="output"
 )
-if len(msgs.messages) == 0 or st.sidebar.button("Reset chat history"):
+if len(msgs.messages) == 0:
     msgs.clear()
     msgs.add_ai_message("How can I help you?")
     st.session_state.steps = {}
@@ -35,22 +41,18 @@ for idx, msg in enumerate(msgs.messages):
 if prompt := st.chat_input(placeholder="Who won the Women's U.S. Open in 2018?"):
     st.chat_message("user").write(prompt)
 
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
-
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key, streaming=True)
-    tools = [DuckDuckGoSearchRun(name="Search")]
-    chat_agent = ConversationalChatAgent.from_llm_and_tools(llm=llm, tools=tools)
-    executor = AgentExecutor.from_agent_and_tools(
-        agent=chat_agent,
-        tools=tools,
-        memory=memory,
-        return_intermediate_steps=True,
-        handle_parsing_errors=True,
+    msgs.add_user_message(prompt)
+    llm = HuggingFaceHub(
+            repo_id="tiiuae/falcon-7b-instruct",
+            model_kwargs={"temperature": 0.5, "max_new_tokens": 500},
+            huggingfacehub_api_token=HUGGINGFACE_API,
+        )
+    prompt_template = PromptTemplate.from_template(
+        "Answer the question: {prompt}"
     )
+    qa_chain = LLMChain(llm = llm, prompt = prompt_template)
     with st.chat_message("assistant"):
         st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
-        response = executor(prompt, callbacks=[st_cb])
-        st.write(response["output"])
-        st.session_state.steps[str(len(msgs.messages) - 1)] = response["intermediate_steps"]
+        response = qa_chain({"prompt": prompt})
+        msgs.add_ai_message(response["text"])
+        st.write(response["text"])
