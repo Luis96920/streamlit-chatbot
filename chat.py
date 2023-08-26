@@ -7,8 +7,12 @@ from langchain.memory.chat_message_histories import StreamlitChatMessageHistory
 from langchain.chains import LLMChain, RetrievalQA
 from langchain import PromptTemplate
 import streamlit as st
+import os
+import dotenv
 
-HUGGINGFACE_API="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"
+dotenv.load_dotenv()
+
+HUGGINGFACE_API = os.getenv("HUGGINGFACE_API")
 
 st.set_page_config(page_title="ChatBot", page_icon="😊")
 st.title("Simple ChatBot")
