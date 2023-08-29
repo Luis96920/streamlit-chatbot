@@ -23,5 +23,4 @@ jobs:
             - name: Build the hello-docker Docker image
               run: |
                     docker build . --tag ghcr.io/balnarendrasapa/chatbot:sha-${{ env.GITHUB_SHA_SHORT }}
-                    docker run ghcr.io/balnarendrasapa/chatbot:sha-${{ env.GITHUB_SHA_SHORT }}
                     docker push ghcr.io/balnarendrasapa/chatbot:sha-${{ env.GITHUB_SHA_SHORT }}
