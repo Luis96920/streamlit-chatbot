@@ -2,9 +2,9 @@ name: publish
 
 on:
     push:
-        branches: [ develop ]
+        branches: [ master ]
 jobs:
-    publish-hello-docker-image:
+    publish-docker-image:
         runs-on: ubuntu-latest
         permissions:
             contents: read
