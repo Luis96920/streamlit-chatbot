@@ -22,5 +22,5 @@ jobs:
             
             - name: Build the Docker image
               run: |
-                    docker build -f dev.Dockerfile --tag ghcr.io/balnarendrasapa/chatbot-dev:sha-${{ github.sha }}
+                    docker build -f dev.Dockerfile --tag ghcr.io/balnarendrasapa/chatbot-dev:sha-${{ github.sha }} .
                     docker push ghcr.io/balnarendrasapa/chatbot-dev:sha-${{ github.sha }}
