@@ -3,8 +3,6 @@ name: publish
 on:
     push:
         branches: [ master ]
-        paths:
-          - 'Dockerfile'
 jobs:
     publish-docker-image:
         runs-on: ubuntu-latest
