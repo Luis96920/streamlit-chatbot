@@ -14,16 +14,7 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Copy the requirements.txt file to the container
-COPY requirements.txt /app/
+COPY ../requirements.txt /app/
 
 # Install dependencies from requirements.txt
 RUN pip3 install -r requirements.txt
-
-# Copy the rest of the application code to the container
-COPY . /app/
-
-# Expose the port that Streamlit will run on
-EXPOSE 8501
-
-# Run the Streamlit application
-CMD ["streamlit", "run", "chat.py"]
