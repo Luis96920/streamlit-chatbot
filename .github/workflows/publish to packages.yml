@@ -1,26 +1,33 @@
 name: publish
 
 on:
-    push:
-        branches: [ master ]
-jobs:
-    publish-docker-image:
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
-        steps:
-            - name: Checkout the repository
-              uses: actions/checkout@v2
+  push:
+    branches:
+      - master
 
-            - name: Login to GitHub Container Registry
-              uses: docker/login-action@v1
-              with:
-                registry: ghcr.io
-                username: ${{ github.actor }}
-                password: ${{ secrets.GITHUB_TOKEN }}
-            
-            - name: Build the Docker image
-              run: |
-                    docker build . --tag ghcr.io/balnarendrasapa/chatbot:sha-${{ github.sha }}
-                    docker push ghcr.io/balnarendrasapa/chatbot:sha-${{ github.sha }}
+jobs:
+  publish-docker-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push the Docker image
+        run: |
+          docker build . --tag ghcr.io/balnarendrasapa/chatbot:sha-${{ github.sha }}
+          docker push ghcr.io/balnarendrasapa/chatbot:sha-${{ github.sha }}
+
+      - name: Tag and push the Docker image as "latest"
+        run: |
+          docker tag ghcr.io/balnarendrasapa/chatbot:sha-${{ github.sha }} ghcr.io/balnarendrasapa/chatbot:latest
+          docker push ghcr.io/balnarendrasapa/chatbot:latest
