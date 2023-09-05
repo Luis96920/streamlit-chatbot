@@ -25,7 +25,7 @@ jobs:
       - name: Build and push the Docker image with SHA tag
         run: |
           # Use double curly braces for GitHub context variables
-          docker build -f dev.Dockerfile --tag ghcr.io/balnarendrasapa/chatbot-dev:sha-${{ github.sha }} .
+          docker build -f .devcontainer/Dockerfile --tag ghcr.io/balnarendrasapa/chatbot-dev:sha-${{ github.sha }} .
           docker push ghcr.io/balnarendrasapa/chatbot-dev:sha-${{ github.sha }}
 
       - name: Tag and push the Docker image as "latest"
