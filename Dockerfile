@@ -19,8 +19,9 @@ RUN pip install poetry && \
 # Copy the rest of the application code to the container
 COPY . /app/
 
-# Expose the port that Streamlit will run on
+# Expose ports for Streamlit applications
 EXPOSE 8501
+EXPOSE 8502
 
-# Run the Streamlit application
-CMD ["streamlit", "run", "chat.py"]
+# Run the Streamlit applications
+CMD ["make", "run"]
