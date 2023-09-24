@@ -4,5 +4,5 @@ services:
     image: ghcr.io/balnarendrasapa/chatbot:latest
     ports:
       - "8501:8501"
-    env_file:
-      - ../.env
+    enironment:
+      HUGGINGFACE_API=<Your HuggingFace API key>
