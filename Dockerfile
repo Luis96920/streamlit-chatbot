@@ -24,7 +24,6 @@ COPY . /app/
 
 # Expose ports for Streamlit applications
 EXPOSE 8501
-EXPOSE 8502
 
 # Run the Streamlit applications
 CMD ["make", "run"]
