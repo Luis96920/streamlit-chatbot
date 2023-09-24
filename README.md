@@ -14,4 +14,12 @@ This repository contains a devcontainer.json file. You can either choose to open
 - If you want to open in codespaces, click on the above badge `Open in GitHub Codespaces` 🛠️
 - If you want to open in VSCode locally, click on the above badge `Open in Dev Containers` 🛠️
 
+## Running server 🏃‍♂️
+### In Dev Environment 🛠️
+- To run the server, run the command `make run`. This starts up the streamlit app. You can access the stremalit app through `localhost:8501` 🚀
+- To stop the server, run `make stopserver` ⛔
 
+### Using docker-compose in root 🐳
+
+- To run using docker-compose, cd into the root directory and run `docker-compose up`. This may not be useful for development.
+- There is an image available in this repository. If you just want to check this project out, download `other/docker-compose.yml` file and run `docker-compose up` 🐳
