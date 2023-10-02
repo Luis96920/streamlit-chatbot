@@ -5,7 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/balnarendrasapa/chatbot)
 
 This streamlit is just an example of how a Large Language Model works. This streamlit is built upon FALCON-4B llm. This llm is light weight and does not require a GPU. 
-This example are taken from langchain library. The link to the original [repo](https://github.com/langchain-ai/streamlit-agent/tree/main). But that chatbot requires you to have OPEN_AI API Key. You don't need that here. This is hosted on Huggingface Spaces. Link to the chatbot [site](https://huggingface.co/spaces/bnsapa/chat_lang)
+This example are taken from langchain library. The link to the original [repo](https://github.com/langchain-ai/streamlit-agent/tree/main). But that chatbot requires you to have OPEN_AI API Key. You don't need that here. This is hosted on Huggingface Spaces. Link to the chatbot [site](https://huggingface.co/spaces/bnsapa/chatbot-using-langchain)
 
 ## Development setup ⚙️
 
