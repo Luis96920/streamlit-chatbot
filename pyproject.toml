@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-langchain = "^0.0.271"
+langchain = "^0.0.312"
 streamlit = "^1.25.0"
 huggingface-hub = "^0.16.4"
 duckduckgo-search = "^3.8.5"
